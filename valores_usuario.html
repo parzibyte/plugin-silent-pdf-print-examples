@@ -1,0 +1,88 @@
+<!--
+
+  ____          _____               _ _           _       
+ |  _ \        |  __ \             (_) |         | |      
+ | |_) |_   _  | |__) |_ _ _ __ _____| |__  _   _| |_ ___ 
+ |  _ <| | | | |  ___/ _` | '__|_  / | '_ \| | | | __/ _ \
+ | |_) | |_| | | |  | (_| | |   / /| | |_) | |_| | ||  __/
+ |____/ \__, | |_|   \__,_|_|  /___|_|_.__/ \__, |\__\___|
+         __/ |                               __/ |        
+        |___/                               |___/         
+    
+____________________________________
+/ Si necesitas ayuda, contáctame en \
+\ https://parzibyte.me               /
+ ------------------------------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+Creado por Parzibyte (https://parzibyte.me).
+------------------------------------------------------------------------------------------------
+Si el código es útil para ti, puedes agradecerme siguiéndome: https://parzibyte.me/blog/sigueme/
+Y compartiendo mi blog con tus amigos
+También tengo canal de YouTube: https://www.youtube.com/channel/UCroP4BTWjfM0CkGB6AFUoBg?sub_confirmation=1
+------------------------------------------------------------------------------------------------
+-->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo 2 - Imprimir PDF sin confirmación con JavaScript - El usuario indica los valores</title>
+</head>
+
+<body>
+    <h1>Ejemplo 2 - Imprimir PDF sin cuadro de diálogo usando JavaScript - El usuario indica los valores</h1>
+    <br>
+    <a href="//parzibyte.me/blog">By Parzibyte</a>
+    <br>
+    <label for="nombreImpresora">Nombre de la impresora:</label>
+    <input type="text" id="nombreImpresora">
+    <br>
+    <label for="nombrePdf">Nombre del PDF. Si es una ruta absoluta, recuerda escapar las <code>\</code></label>
+    <input type="text" id="nombrePdf">
+    <br>
+    <button id="btnImprimir">Imprimir</button>
+    <p id="estado"></p>
+    <script>
+        // Función ayudante
+        const reemplazarEspaciosConEntidad = cadena => cadena.replaceAll(" ", "%20");
+
+        const $nombreImpresora = document.querySelector("#nombreImpresora"),
+            $nombrePdf = document.querySelector("#nombrePdf"),
+            $btnImprimir = document.querySelector("#btnImprimir"),
+            $estado = document.querySelector("#estado");
+        // Esperar el clic del botón
+        $btnImprimir.addEventListener("click", () => {
+            // Tomar los valores de los campos
+            const nombrePdf = reemplazarEspaciosConEntidad($nombrePdf.value);
+            const nombreImpresora = $nombrePdf.value;
+            if (!nombreImpresora || !nombrePdf) {
+                return alert("El nombre de la impresora y el nombre del PDF son requeridos");
+            }
+            const url = `http://localhost:8080/?nombrePdf=${nombrePdf}&impresora=${nombreImpresora}`;
+            // Hacer petición...
+            $estado.textContent = "Imprimiendo...";
+            fetch(url)
+                .then(respuesta => {
+                    // Si la respuesta es OK, entonces todo fue bien
+                    if (respuesta.status === 200) {
+                        $estado.textContent = "Impreso correctamente (salvo que se haya indicado un error por parte de PDFtoPrinter";
+                        console.log("Impresión OK");
+                    } else {
+                        // Si no, decodificamos el mensaje para ver el error
+                        respuesta.json()
+                            .then(mensaje => {
+                                $estado.textContent = "Error imprimiendo: " + mensaje;
+                                console.log("Error: " + mensaje);
+                            });
+                    }
+                });
+        });
+    </script>
+</body>
+
+</html>
