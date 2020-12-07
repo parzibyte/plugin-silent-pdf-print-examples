@@ -59,7 +59,7 @@ También tengo canal de YouTube: https://www.youtube.com/channel/UCroP4BTWjfM0Ck
         $btnImprimir.addEventListener("click", () => {
             // Tomar los valores de los campos
             const nombrePdf = reemplazarEspaciosConEntidad($nombrePdf.value);
-            const nombreImpresora = $nombrePdf.value;
+            const nombreImpresora = $nombreImpresora.value;
             if (!nombreImpresora || !nombrePdf) {
                 return alert("El nombre de la impresora y el nombre del PDF son requeridos");
             }
