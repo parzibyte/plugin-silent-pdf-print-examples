@@ -69,7 +69,7 @@ También tengo canal de YouTube: https://www.youtube.com/channel/UCroP4BTWjfM0Ck
                 const respuesta = await fetch(url);
                 // Si la respuesta es OK, entonces todo fue bien
                 if (respuesta.status === 200) {
-                    $estado.textContent = "Impreso correctamente (salvo que se haya indicado un error por parte de PDFtoPrinter";
+                    $estado.textContent = "Impreso correctamente (salvo que se haya indicado un error por parte de PDFtoPrinter)";
                     console.log("Impresión OK");
                 } else {
                     // Si no, decodificamos el mensaje para ver el error
