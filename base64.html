@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imprimir a partir de base64</title>
+</head>
+
+<body>
+    <label for="impresoras">Seleccione una impresora</label>
+    <br>
+    <select name="" id="impresoras"></select>
+    <br>
+    <br>
+    <label for="contenido">PDF como base64:</label>
+    <br>
+    <textarea id="contenido" cols="60"
+        rows="10">JVBERi0xLjcKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZwovT3V0bGluZXMgMiAwIFIKL1BhZ2VzIDMgMCBSID4+CmVuZG9iagoyIDAgb2JqCjw8IC9UeXBlIC9PdXRsaW5lcyAvQ291bnQgMCA+PgplbmRvYmoKMyAwIG9iago8PCAvVHlwZSAvUGFnZXMKL0tpZHMgWzYgMCBSCl0KL0NvdW50IDEKL1Jlc291cmNlcyA8PAovUHJvY1NldCA0IDAgUgovRm9udCA8PCAKL0YxIDggMCBSCi9GMiA5IDAgUgovRjMgMTAgMCBSCj4+Cj4+Ci9NZWRpYUJveCBbMC4wMDAgMC4wMDAgNjEyLjAwMCA3OTIuMDAwXQogPj4KZW5kb2JqCjQgMCBvYmoKWy9QREYgL1RleHQgXQplbmRvYmoKNSAwIG9iago8PAovUHJvZHVjZXIgKP7/AGQAbwBtAHAAZABmACAAMgAuADAALgA0ACAAKwAgAEMAUABEAEYpCi9DcmVhdGlvbkRhdGUgKEQ6MjAyNDA0MTUyMDA3NDMtMDUnMDAnKQovTW9kRGF0ZSAoRDoyMDI0MDQxNTIwMDc0My0wNScwMCcpCj4+CmVuZG9iago2IDAgb2JqCjw8IC9UeXBlIC9QYWdlCi9NZWRpYUJveCBbMC4wMDAgMC4wMDAgNjEyLjAwMCA3OTIuMDAwXQovUGFyZW50IDMgMCBSCi9Db250ZW50cyA3IDAgUgo+PgplbmRvYmoKNyAwIG9iago8PCAvRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDE5MCA+PgpzdHJlYW0KeJx9jzEOgkAQRXtO8Utt1oVFWFqjFFYkbmcsFhgNibC4gAne2NoLCAUJJMZkMlP99984nHHOMd/25uwUhM+4GyD0Q+aJCCrHJnbhuoxDXYHz6mR6dBWSfYychilN01qdFZ8KmSWdG9TGYn2BOuKgRqQnAiakWDK9OTPR9lWkfUuLmNwyT0Z/VBhGmbLr0RRlfaex+dERGrJvZKZ6km2LQUgPwhqZzmk4VM1LpneFYJLLHx2pbijwp8gXCIVS7AplbmRzdHJlYW0KZW5kb2JqCjggMCBvYmoKPDwgL1R5cGUgL0ZvbnQKL1N1YnR5cGUgL1R5cGUxCi9OYW1lIC9GMQovQmFzZUZvbnQgL0hlbHZldGljYQovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwo+PgplbmRvYmoKOSAwIG9iago8PCAvVHlwZSAvRm9udAovU3VidHlwZSAvVHlwZTEKL05hbWUgL0YyCi9CYXNlRm9udCAvSGVsdmV0aWNhLUJvbGQKL0VuY29kaW5nIC9XaW5BbnNpRW5jb2RpbmcKPj4KZW5kb2JqCjEwIDAgb2JqCjw8IC9UeXBlIC9Gb250Ci9TdWJ0eXBlIC9UeXBlMQovTmFtZSAvRjMKL0Jhc2VGb250IC9UaW1lcy1Sb21hbgovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZwo+PgplbmRvYmoKMTEgMCBvYmoKWzYgMCBSIC9GaXRdCmVuZG9iagp4cmVmCjAgMTIKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDA5IDAwMDAwIG4gCjAwMDAwMDAwNzQgMDAwMDAgbiAKMDAwMDAwMDEyMCAwMDAwMCBuIAowMDAwMDAwMjk1IDAwMDAwIG4gCjAwMDAwMDAzMjQgMDAwMDAgbiAKMDAwMDAwMDQ3MyAwMDAwMCBuIAowMDAwMDAwNTc2IDAwMDAwIG4gCjAwMDAwMDA4MzggMDAwMDAgbiAKMDAwMDAwMDk0NSAwMDAwMCBuIAowMDAwMDAxMDU3IDAwMDAwIG4gCjAwMDAwMDExNjcgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSAxMgovUm9vdCAxIDAgUgovSW5mbyA1IDAgUgovSURbPGVjM2ZkZmYxNGE4NThiMmEzMWIxZTAxMDdjZDA1NTQ4PjxlYzNmZGZmMTRhODU4YjJhMzFiMWUwMTA3Y2QwNTU0OD5dCj4+CnN0YXJ0eHJlZgoxMTk2CiUlRU9GCg==</textarea>
+    <br>
+    <button id="imprimir">Imprimir</button>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const $impresoras = document.querySelector("#impresoras"),
+                $contenido = document.querySelector("#contenido");
+            const $imprimir = document.querySelector("#imprimir");
+            const imprimir = async () => {
+                const respuestaHttp = await fetch("http://localhost:8080/base64", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        nombreImpresora: $impresoras.value,
+                        contenido: $contenido.value,
+                        serial: "",
+                    })
+                });
+                if (respuestaHttp.status === 200) {
+                    alert("Impreso correctamente")
+                } else {
+                    const mensajeDeError = await respuestaHttp.text();
+                    alert("Error: " + mensajeDeError)
+                }
+            }
+            $imprimir.onclick = () => {
+                imprimir();
+            }
+            const refrescarListaDeImpresoras = async () => {
+                const respuestaHttp = await fetch("http://localhost:8080/impresoras");
+                const impresoras = await respuestaHttp.json();
+                for (const impresora of impresoras) {
+                    const opcion = Object.assign(document.createElement("option"), {
+                        value: impresora,
+                        text: impresora,
+                    });
+                    $impresoras.appendChild(opcion);
+                }
+            }
+            refrescarListaDeImpresoras();
+        })
+
+    </script>
+</body>
+
+</html>
