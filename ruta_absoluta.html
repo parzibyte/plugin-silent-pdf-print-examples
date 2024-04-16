@@ -37,38 +37,67 @@ También tengo canal de YouTube: https://www.youtube.com/channel/UCroP4BTWjfM0Ck
 <body>
     <h1>Ejemplo 3 - Imprimir PDF sin cuadro de diálogo usando JavaScript - Ruta del PDF es absoluta</h1>
     <br>
+    <label for="impresoras">Seleccione una impresora:</label>
+    <br>
+    <select name="" id="impresoras"></select>
+    <br>
+    <br>
+    <label for="ubicacionPdf">Ubicación absoluta del PDF</label>
+    <br>
+    <textarea name="" id="ubicacionPdf" cols="100" rows="2"
+        placeholder="Ruta absoluta del PDF">C:\Users\parzibyte\Desktop\ticket.pdf</textarea>
+    <br>
+    <br>
+    <button id="imprimir">Imprimir</button>
+    <br>
+    <br>
     <a href="//parzibyte.me/blog">By Parzibyte</a>
+    <br>
     <p id="estado"></p>
     <script>
+        const $impresoras = document.querySelector("#impresoras");
+        const $estado = document.querySelector("#estado");
+        const $ubicacionPdf = document.querySelector("#ubicacionPdf");
+        const $imprimir = document.querySelector("#imprimir");
         // Función ayudante
         const reemplazarEspaciosConEntidad = cadena => cadena.replaceAll(" ", "%20");
-        // Estos parámetros podrían venir de cualquier lugar
-        // Presta atención al escape de la backslash \
-        let nombrePdf = "C:\\Users\\Luis Cabrera Benito\\Desktop\\ticket.pdf";
-        // Debemos remover los espacios:
-        nombrePdf = reemplazarEspaciosConEntidad(nombrePdf);
-
-        const nombreImpresora = "ZJ58";
-        const url = `http://localhost:8080/?nombrePdf=${nombrePdf}&impresora=${nombreImpresora}`;
-        // Elemento DOM, solo es para depurar
-        const $estado = document.querySelector("#estado");
-        $estado.textContent = "Imprimiendo...";
-        // Hacer petición...
-        fetch(url)
-            .then(respuesta => {
+        const imprimir = async () => {
+            let nombrePdf = $ubicacionPdf.value;
+            nombrePdf = reemplazarEspaciosConEntidad(nombrePdf);
+            const nombreImpresora = $impresoras.value;
+            const url = `http://localhost:8080/?nombrePdf=${nombrePdf}&impresora=${nombreImpresora}`;
+            $estado.textContent = "Imprimiendo...";
+            // Hacer petición...
+            try {
+                const respuesta = await fetch(url);
                 // Si la respuesta es OK, entonces todo fue bien
                 if (respuesta.status === 200) {
-                    $estado.textContent = "Impreso correctamente (salvo que se haya indicado un error por parte de PDFtoPrinter";
+                    $estado.textContent = "Impreso correctamente (salvo que se haya indicado un error por parte de PDFtoPrinter)";
                     console.log("Impresión OK");
                 } else {
                     // Si no, decodificamos el mensaje para ver el error
-                    respuesta.json()
-                        .then(mensaje => {
-                            $estado.textContent = "Error imprimiendo: " + mensaje;
-                            console.log("Error: " + mensaje);
-                        });
+                    const mensaje = await respuesta.json();
+                    $estado.textContent = "Error imprimiendo: " + mensaje;
+                    console.log("Error: " + mensaje);
                 }
-            });
+            } catch (error) {
+                $estado.textContent = "Error haciendo petición. Asegúrese de que el plugin se está ejecutando: " + error;
+                console.log("Error: " + error);
+            }
+        }
+        const refrescarListaDeImpresoras = async () => {
+            const respuestaHttp = await fetch("http://localhost:8080/impresoras");
+            const impresoras = await respuestaHttp.json();
+            for (const impresora of impresoras) {
+                const opcion = Object.assign(document.createElement("option"), {
+                    value: impresora,
+                    text: impresora,
+                });
+                $impresoras.appendChild(opcion);
+            }
+        }
+        refrescarListaDeImpresoras();
+        $imprimir.addEventListener("click", imprimir);
     </script>
 </body>
 
