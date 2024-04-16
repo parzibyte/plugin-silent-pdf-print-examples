@@ -36,33 +36,65 @@ También tengo canal de YouTube: https://www.youtube.com/channel/UCroP4BTWjfM0Ck
 
 <body>
     <h1>Ejemplo 4 - Imprimir PDF desde la nube según URL</h1>
+
+
+
+
+    <label for="impresoras">Seleccione una impresora</label>
+    <br>
+    <select name="" id="impresoras"></select>
+    <br>
+    <label for="urlPdf">URL del PDF a imprimir. El PDF debe ser accesible públicamente</label>
+    <textarea placeholder="https://ubicación.del.pdf" name="" id="urlPdf" cols="100"
+        rows="2">https://parzibyte.github.io/plugin-silent-pdf-print-examples/ticket.pdf</textarea>
+    <p id="estado"></p>
+    <button id="imprimir">Imprimir</button>
     <br>
     <a href="//parzibyte.me/blog">By Parzibyte</a>
-    <p id="estado"></p>
+
     <script>
-        // Estos parámetros podrían venir de cualquier lugar
-        const urlPdf = "https://parzibyte.github.io/plugin-silent-pdf-print-examples/ticket.pdf";
-        const nombreImpresora = "Microsoft Print to PDF";
-        const url = `http://localhost:8080/url?urlPdf=${urlPdf}&impresora=${nombreImpresora}`;
         // Elemento DOM, solo es para depurar
-        const $estado = document.querySelector("#estado");
-        // Hacer petición...
-        $estado.textContent = "Imprimiendo...";
-        fetch(url)
-            .then(respuesta => {
+        const $estado = document.querySelector("#estado"),
+            $impresoras = document.querySelector("#impresoras"),
+            $urlPdf = document.querySelector("#urlPdf"),
+            $imprimir = document.querySelector("#imprimir");
+        const imprimir = async () => {
+            $estado.textContent = "Imprimiendo...";
+            // Estos parámetros podrían venir de cualquier lugar
+            const urlPDF = $urlPdf.value;
+            const nombreImpresora = $impresoras.value;
+            const url = `http://localhost:8080/url?urlPdf=${urlPDF}&impresora=${nombreImpresora}`;
+            // Hacer petición...
+            try {
+                const respuesta = await fetch(url);
                 // Si la respuesta es OK, entonces todo fue bien
                 if (respuesta.status === 200) {
                     $estado.textContent = "Impreso correctamente (salvo que se haya indicado un error por parte de PDFtoPrinter";
                     console.log("Impresión OK");
                 } else {
                     // Si no, decodificamos el mensaje para ver el error
-                    respuesta.json()
-                        .then(mensaje => {
-                            $estado.textContent = "Error imprimiendo: " + mensaje;
-                            console.log("Error: " + mensaje);
-                        });
+                    const mensaje = await respuesta.json();
+                    $estado.textContent = "Error imprimiendo: " + mensaje;
+                    console.log("Error: " + mensaje);
                 }
-            });
+            } catch (error) {
+                $estado.textContent = "Error haciendo petición. Asegúrese de que el plugin se está ejecutando: " + error;
+                console.log("Error: " + error);
+            }
+        }
+        const refrescarListaDeImpresoras = async () => {
+            const respuestaHttp = await fetch("http://localhost:8080/impresoras");
+            const impresoras = await respuestaHttp.json();
+            for (const impresora of impresoras) {
+                const opcion = Object.assign(document.createElement("option"), {
+                    value: impresora,
+                    text: impresora,
+                });
+                $impresoras.appendChild(opcion);
+            }
+        }
+        refrescarListaDeImpresoras();
+        $imprimir.onclick = imprimir;
     </script>
 </body>
 
